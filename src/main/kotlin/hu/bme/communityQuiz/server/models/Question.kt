@@ -11,7 +11,18 @@
 */
 package hu.bme.communityQuiz.server.models
 
+import java.util.*
+import javax.persistence.*
 
+
+@Entity
+@NamedQueries(
+    NamedQuery(
+        name = "listQuestion",
+        query = "FROM Question"
+    )
+)
+@Table(name = "question")
 /**
  * 
  * @param id 
@@ -23,13 +34,15 @@ package hu.bme.communityQuiz.server.models
  * @param wrongAnswer3 
  */
 data class Question (
-    val id: kotlin.String,
-    val category: kotlin.String,
-    val question: kotlin.String,
-    val rightAnswer: kotlin.String,
-    val wrongAnswer1: kotlin.String,
-    val wrongAnswer2: kotlin.String,
-    val wrongAnswer3: kotlin.String
+    @Id
+    @Column(name="id", length = 255)
+    val id: String = UUID.randomUUID().toString(),
+    val category: String = "",
+    val question: String = "",
+    val rightAnswer: String = "",
+    val wrongAnswer1: String = "",
+    val wrongAnswer2: String = "",
+    val wrongAnswer3: String = ""
 ) {
 
 }

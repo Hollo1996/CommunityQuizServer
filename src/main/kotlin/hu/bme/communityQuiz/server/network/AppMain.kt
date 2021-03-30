@@ -3,6 +3,7 @@ package hu.bme.communityQuiz.server.network
 import com.codahale.metrics.*
 import com.sun.javafx.font.Metrics
 import com.typesafe.config.ConfigFactory
+import hu.bme.communityQuiz.server.models.HibernateManager
 import io.ktor.application.*
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
@@ -53,5 +54,6 @@ fun Application.main() {
     environment.monitor.subscribe(ApplicationStopping)
     {
         HTTP.client.close()
+        HibernateManager.closeFactory()
     }
 }

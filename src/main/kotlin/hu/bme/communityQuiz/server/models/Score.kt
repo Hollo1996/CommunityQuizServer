@@ -11,7 +11,18 @@
 */
 package hu.bme.communityQuiz.server.models
 
+import java.math.BigDecimal
+import java.util.*
+import javax.persistence.*
 
+@Entity
+@NamedQueries(
+    NamedQuery(
+        name = "listScore",
+        query = "FROM Score"
+    )
+)
+@Table(name = "score")
 /**
  * 
  * @param id 
@@ -19,9 +30,11 @@ package hu.bme.communityQuiz.server.models
  * @param point 
  */
 data class Score (
-    val id: kotlin.String,
-    val category: kotlin.String,
-    val point: java.math.BigDecimal
+    @Id
+    @Column(name="id", length = 255)
+    val id: String = UUID.randomUUID().toString(),
+    val category: String = "",
+    val point: BigDecimal = BigDecimal(0)
 ) {
 
 }

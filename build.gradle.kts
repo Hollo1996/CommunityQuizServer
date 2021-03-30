@@ -25,6 +25,9 @@ dependencies {
     compile("io.ktor:ktor-client-core:$ktorVersion")
     compile("io.ktor:ktor-client-apache:$ktorVersion")
     compile("ch.qos.logback:logback-classic:1.2.1")
+    //hibernate
+    compile("org.hibernate:hibernate-core:5.2.10.Final")
+    compile("mysql:mysql-connector-java:5.1.12")
 }
 
 tasks.test {
