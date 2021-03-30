@@ -11,39 +11,25 @@
 */
 package hu.bme.communityQuiz.server.network.apis
 
-import com.google.gson.Gson
-import io.ktor.application.call
-import io.ktor.http.ContentType
-import io.ktor.locations.*
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.*
+import hu.bme.communityQuiz.server.models.HibernateManager
+import hu.bme.communityQuiz.server.models.Question
 import hu.bme.communityQuiz.server.network.Paths
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 
 // ktor 0.9.x is missing io.ktor.locations.DELETE, this adds it.
 // see https://github.com/ktorio/ktor/issues/288
 
+@KtorExperimentalLocationsAPI
 fun Route.QuizApi() {
-    val gson = Gson()
-    val empty = mutableMapOf<String, Any?>()
-
     get<Paths.getQuiz> {
-        val exampleContentType = "application/xml"
-        val exampleContentString = """<null>
-          <id>aeiou</id>
-          <category>aeiou</category>
-          <question>aeiou</question>
-          <rightAnswer>aeiou</rightAnswer>
-          <wrongAnswer1>aeiou</wrongAnswer1>
-          <wrongAnswer2>aeiou</wrongAnswer2>
-          <wrongAnswer3>aeiou</wrongAnswer3>
-        </null>"""
-        
-        when(exampleContentType) {
-            "application/json" -> call.respond(gson.fromJson(exampleContentString, empty::class.java))
-            "application/xml" -> call.respondText(exampleContentString, ContentType.Text.Xml)
-            else -> call.respondText(exampleContentString)
-        }
+        val category = call.receive<String>()
+        val questions = HibernateManager.list<Question>("Question")
+        call.respond(HttpStatusCode.OK,questions.filter { it.category.compareTo(category) == 0 })
     }
     
 }

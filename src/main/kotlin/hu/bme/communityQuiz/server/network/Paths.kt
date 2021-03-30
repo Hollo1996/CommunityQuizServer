@@ -20,6 +20,7 @@ import io.ktor.util.pipeline.*
 
 
 // NOTE: ktor-location@0.9.0 is missing extension for Route.delete. This includes it.
+@KtorExperimentalLocationsAPI
 inline fun <reified T : Any> Route.delete(noinline body: suspend PipelineContext<Unit, ApplicationCall>.(T) -> Unit): Route {
     return location(T::class) {
         method(HttpMethod.Delete) {
@@ -28,6 +29,7 @@ inline fun <reified T : Any> Route.delete(noinline body: suspend PipelineContext
     }
 }
 
+@KtorExperimentalLocationsAPI
 object Paths {
     /**
      * Get list of categories

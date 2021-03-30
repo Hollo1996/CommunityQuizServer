@@ -11,22 +11,28 @@
 */
 package hu.bme.communityQuiz.server.network.apis
 
-import com.google.gson.Gson
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.response.respond
+import hu.bme.communityQuiz.server.models.HibernateManager
+import hu.bme.communityQuiz.server.models.Question
+import hu.bme.communityQuiz.server.models.Score
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.request.*
+import io.ktor.response.*
 import io.ktor.routing.*
 
 // ktor 0.9.x is missing io.ktor.locations.DELETE, this adds it.
 // see https://github.com/ktorio/ktor/issues/288
 
 fun Route.QuestionApi() {
-    val gson = Gson()
-    val empty = mutableMapOf<String, Any?>()
 
     route("/question") {
         put {
-            call.respond(HttpStatusCode.NotImplemented)
+            val question = call.receive<Question>()
+            val scores = HibernateManager.list<Score>("Score")
+            if(!scores.any { it.category.compareTo(question.category) == 0 })
+                HibernateManager.save(Score(category = question.category))
+            HibernateManager.save(question)
+            call.respond(HttpStatusCode.OK)
         }
     }
     

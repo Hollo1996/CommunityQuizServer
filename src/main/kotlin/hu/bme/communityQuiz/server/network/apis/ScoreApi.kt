@@ -11,42 +11,47 @@
 */
 package hu.bme.communityQuiz.server.network.apis
 
-import com.google.gson.Gson
-import io.ktor.application.call
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.*
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.*
+import hu.bme.communityQuiz.server.models.HibernateManager
+import hu.bme.communityQuiz.server.models.Score
 import hu.bme.communityQuiz.server.network.Paths
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 
 // ktor 0.9.x is missing io.ktor.locations.DELETE, this adds it.
 // see https://github.com/ktorio/ktor/issues/288
 
 fun Route.ScoreApi() {
-    val gson = Gson()
-    val empty = mutableMapOf<String, Any?>()
 
     get<Paths.listGlobalScores> {
-        val exampleContentType = "application/xml"
-        val exampleContentString = """<null>
-          <id>aeiou</id>
-          <category>aeiou</category>
-          <point>1.3579</point>
-        </null>"""
-        
-        when(exampleContentType) {
-            "application/json" -> call.respond(gson.fromJson(exampleContentString, empty::class.java))
-            "application/xml" -> call.respondText(exampleContentString, ContentType.Text.Xml)
-            else -> call.respondText(exampleContentString)
-        }
+        val scores = HibernateManager.list<Score>("Score")
+        call.respond(HttpStatusCode.OK,scores)
     }
     
 
     route("/score") {
         put {
-            call.respond(HttpStatusCode.NotImplemented)
+            val score = call.receive<Score>()
+            val scores = HibernateManager.list<Score>("Score")
+            if (scores.any { it.category.compareTo(score.category)==0 })
+                scores.find { it.category.compareTo(score.category)==0 }
+                    ?.let {
+                        if(it.point < score.point){
+                            HibernateManager.update(
+                                Score(
+                                    id = it.id,
+                                    category = score.category,
+                                    point = score.point
+                                )
+                            )
+                        }
+                    }
+            else
+                HibernateManager.save(score)
+            call.respond(HttpStatusCode.OK)
         }
     }
     

@@ -11,32 +11,25 @@
 */
 package hu.bme.communityQuiz.server.network.apis
 
-import com.google.gson.Gson
-import io.ktor.application.call
-import io.ktor.http.ContentType
-import io.ktor.locations.*
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.*
+import hu.bme.communityQuiz.server.models.HibernateManager
+import hu.bme.communityQuiz.server.models.Score
 import hu.bme.communityQuiz.server.network.Paths
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.response.*
+import io.ktor.routing.*
 
 // ktor 0.9.x is missing io.ktor.locations.DELETE, this adds it.
 // see https://github.com/ktorio/ktor/issues/288
 
 
 fun Route.CategoryApi() {
-    val gson = Gson()
-    val empty = mutableMapOf<String, Any?>()
 
     get<Paths.getCategories> {
-        val exampleContentType = "application/xml"
-        val exampleContentString = """aeiou"""
-        
-        when(exampleContentType) {
-            "application/json" -> call.respond(gson.fromJson(exampleContentString, empty::class.java))
-            "application/xml" -> call.respondText(exampleContentString, ContentType.Text.Xml)
-            else -> call.respondText(exampleContentString)
-        }
+        val scores = HibernateManager.list<Score>("Score")
+        val categories = scores.map { it.category }
+        call.respond(HttpStatusCode.OK,categories)
     }
     
 }
