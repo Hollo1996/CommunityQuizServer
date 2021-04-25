@@ -17,7 +17,7 @@ import java.util.concurrent.Executors
  */
 internal fun ApplicationHstsConfiguration(): HSTS.Configuration.() -> Unit {
     return {
-        maxAge = Duration.ofDays(365)
+        maxAgeInSeconds = Duration.ofDays(365).seconds
         includeSubDomains = true
         preload = false
 

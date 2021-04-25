@@ -1,4 +1,4 @@
-
+package hu.bme.communityQuiz.server
 
 fun main(args:Array<String>) {
     run(args)

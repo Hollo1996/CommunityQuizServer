@@ -42,7 +42,7 @@ object Paths {
      * 
      * @param category  
      */
-    @Location("/quiz/{category}") class getQuiz(val category: kotlin.String)
+    @Location("/quiz/{category}") class getQuiz(val category: String)
 
     /**
      * List global scores

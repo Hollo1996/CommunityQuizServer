@@ -17,17 +17,17 @@ dependencies {
     testImplementation(kotlin("test-junit"))
     //ktor
     val ktorVersion = "1.3.2"
-    compile("io.ktor:ktor-server-core:$ktorVersion")
-    compile("io.ktor:ktor-server-netty:$ktorVersion")
-    compile("io.ktor:ktor-metrics:$ktorVersion")
-    compile("io.ktor:ktor-locations:$ktorVersion")
-    compile("io.ktor:ktor-gson:$ktorVersion")
-    compile("io.ktor:ktor-client-core:$ktorVersion")
-    compile("io.ktor:ktor-client-apache:$ktorVersion")
-    compile("ch.qos.logback:logback-classic:1.2.1")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-metrics:$ktorVersion")
+    implementation("io.ktor:ktor-locations:$ktorVersion")
+    implementation("io.ktor:ktor-gson:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-apache:$ktorVersion")
+    implementation("ch.qos.logback:logback-classic:1.2.1")
     //hibernate
-    compile("org.hibernate:hibernate-core:5.2.10.Final")
-    compile("mysql:mysql-connector-java:5.1.12")
+    implementation("org.hibernate:hibernate-core:5.2.10.Final")
+    implementation("mysql:mysql-connector-java:5.1.12")
 }
 
 tasks.test {

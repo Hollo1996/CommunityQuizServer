@@ -1,28 +1,22 @@
 package hu.bme.communityQuiz.server.network
 
-import com.codahale.metrics.*
-import com.sun.javafx.font.Metrics
+import com.codahale.metrics.Slf4jReporter
 import com.typesafe.config.ConfigFactory
 import hu.bme.communityQuiz.server.models.HibernateManager
-import io.ktor.application.*
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.config.HoconApplicationConfig
-import io.ktor.features.*
-import io.ktor.gson.GsonConverter
-import io.ktor.locations.*
-import io.ktor.routing.*
-import java.util.concurrent.*
-import hu.bme.communityQuiz.server.network.apis.CategoryApi
-import hu.bme.communityQuiz.server.network.apis.QuestionApi
 import hu.bme.communityQuiz.server.network.apis.QuizApi
-import hu.bme.communityQuiz.server.network.apis.ScoreApi
+import io.ktor.application.*
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
+import io.ktor.config.*
+import io.ktor.features.*
+import io.ktor.gson.*
 import io.ktor.http.*
+import io.ktor.locations.*
 import io.ktor.metrics.dropwizard.*
+import io.ktor.routing.*
 import io.ktor.util.*
-import kotlin.time.DurationUnit
+import java.util.concurrent.TimeUnit
 import kotlin.time.ExperimentalTime
-import kotlin.time.toDuration
 
 
 @KtorExperimentalAPI
@@ -32,6 +26,8 @@ object HTTP {
     val client = HttpClient(Apache)
 }
 
+@KtorExperimentalLocationsAPI
+@KtorExperimentalAPI
 @ExperimentalTime
 fun Application.main() {
     install(DefaultHeaders)
@@ -51,10 +47,7 @@ fun Application.main() {
     install(Compression, ApplicationCompressionConfiguration()) // see http://ktor.io/features/compression.html
     install(Locations) // see http://ktor.io/features/locations.html
     install(Routing) {
-        CategoryApi()
-        QuestionApi()
         QuizApi()
-        ScoreApi()
     }
     install(CORS){
         method(HttpMethod.Options)
